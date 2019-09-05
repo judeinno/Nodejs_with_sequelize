@@ -58,6 +58,17 @@ app.get('/findone', (req, res) => {
   });
 })
 
+app.put('/update', (req, res) => {
+  User.update({ name: 'jude', password: 'password'}, {
+    where: { id: 1 }
+  }).then(rows => {
+    res.json(rows)
+  }).catch((err) =>{
+    console.log(err);
+    res.status(404).send(err)
+  });
+})
+
 app.post('/post', (req, res) => {
   const newUser = req.body.user
   User.create({
