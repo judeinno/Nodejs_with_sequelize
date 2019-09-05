@@ -2,6 +2,8 @@ const express = require('express')
 const Sequelize = require('sequelize')
 const _USERS = require('./users.json')
 
+const Op = Sequelize.Op;
+
 const app = express();
 const port = 8081;
 
@@ -31,6 +33,21 @@ const User = connection.define('User', {
   }
 
 });
+
+app.get('/findall', (req, res) => {
+  User.findAll({
+    where: {
+      name: {
+        [Op.like]: 'Dav%'
+      }
+    }
+  }).then(user => {
+    res.json(user)
+  }).catch((err) =>{
+    console.log(err);
+    res.status(404).send(err)
+  });
+})
 
 app.post('/post', (req, res) => {
   const newUser = req.body.user
