@@ -21,6 +21,12 @@ connection
     logging: console.log
   })
   .then(() => {
+    User.create({
+      name: 'Jude',
+      bio: 'Am a dev'
+    })
+  })
+  .then(() => {
   console.log('Connected to DB');
 }).catch((err) => {
   console.log(`Failled to connect to db: error = ${err}`);
