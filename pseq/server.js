@@ -1,5 +1,6 @@
 const express = require('express')
 const Sequelize = require('sequelize')
+const _USERS = require('./users.json')
 
 const app = express();
 const port = 8081;
@@ -15,32 +16,20 @@ const connection =  new Sequelize('db', 'user', 'pass', {
 })
 
 const User = connection.define('User', {
-  uuid: {
-    type: Sequelize.UUID,
-    primaryKey: true,
-    defaultValue: Sequelize.UUIDV4
+  name: Sequelize.STRING,
+  email: {
+    type: Sequelize.STRING,
+    validate: {
+      isEmail: true
+    }
   },
-  first: Sequelize.STRING,
-  last: Sequelize.STRING,
-  full_name: Sequelize.STRING,
-  bio: Sequelize.TEXT,
-
-}, {
-  hooks: {
-    beforeValidate: () => {
-      console.log('Before Validate');
-    },
-    afterValidate: () => {
-      console.log('after Validate');
-    },
-    beforeCreate: (user) => {
-      user.full_name = `${user.first} ${user.last}`
-      console.log('before Create');
-    },
-    afterCreate: () => {
-      console.log('after Create');
-    },
+  password: {
+    type: Sequelize.STRING,
+    validate: {
+      isAlphanumeric: true
+    }
   }
+
 });
 
 app.get('/', (req, res) => {
@@ -61,10 +50,8 @@ connection
     force: true
   })
   .then(() => {
-    User.create({
-      first: 'Jude',
-      last: 'Jude',
-      bio: 'Am a dev'
+    User.bulkCreate(_USERS).then(() => {
+      console.log('Successfully created the users')
     })
   })
   .then(() => {
