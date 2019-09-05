@@ -69,6 +69,19 @@ app.put('/update', (req, res) => {
   });
 })
 
+app.delete('/remove', (req, res) => {
+  User.destroy({
+    where: {
+      id: 50
+    }
+  }).then(user => {
+    res.json(user)
+  }).catch((err) =>{
+    console.log(err);
+    res.status(404).send(err)
+  });
+})
+
 app.post('/post', (req, res) => {
   const newUser = req.body.user
   User.create({
