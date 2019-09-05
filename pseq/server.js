@@ -32,10 +32,10 @@ const User = connection.define('User', {
 
 });
 
-app.get('/', (req, res) => {
+app.post('/post', (req, res) => {
+  const newUser = req.body.user
   User.create({
-    name: 'Jude',
-    bio: 'Am a dev foo'
+    newUser
   }).then(user => {
     res.json(user)
   }).catch((err) =>{
