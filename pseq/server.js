@@ -49,6 +49,15 @@ app.get('/findall', (req, res) => {
   });
 })
 
+app.get('/findone', (req, res) => {
+  User.findByPk('55').then(user => {
+    res.json(user)
+  }).catch((err) =>{
+    console.log(err);
+    res.status(404).send(err)
+  });
+})
+
 app.post('/post', (req, res) => {
   const newUser = req.body.user
   User.create({
