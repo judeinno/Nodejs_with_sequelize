@@ -20,24 +20,47 @@ const User = connection.define('User', {
     primaryKey: true,
     defaultValue: Sequelize.UUIDV4
   },
-  name: Sequelize.STRING,
-  bio: Sequelize.TEXT,
+  name: {
+    type: Sequelize.STRING,
+    validate: {
+      len: [3]
+    }
+  },
+  bio: {
+    type: Sequelize.TEXT,
+    contains: {
+      args: ['foo'],
+      msg: 'Error: Field must contain foo'
+    }
+  },
 
 }, {
   timestamps: false
 });
+
+app.get('/', (req, res) => {
+  User.create({
+    name: 'Jude',
+    bio: 'Am a dev foo'
+  }).then(user => {
+    res.json(user)
+  }).catch((err) =>{
+    console.log(err);
+    res.status(404).send(err)
+  })
+})
 
 connection
   .sync({
     logging: console.log,
     force: true
   })
-  .then(() => {
-    User.create({
-      name: 'Jude',
-      bio: 'Am a dev'
-    })
-  })
+  // .then(() => {
+  //   User.create({
+  //     name: 'Jude',
+  //     bio: 'Am a dev'
+  //   })
+  // })
   .then(() => {
   console.log('Connected to DB');
 }).catch((err) => {
